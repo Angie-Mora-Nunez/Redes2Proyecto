@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # DemocraxssyFrontend
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.27.
@@ -58,6 +57,3 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-=======
-# Redes2Proyecto
->>>>>>> 1653ac1ba4ff4bac03705e6ca2f1b0e6f26fe7b9

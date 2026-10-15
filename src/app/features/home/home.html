@@ -1,4 +1,191 @@
-<main>
-  <h1>DemocraXSSy</h1>
-  <p>Proyecto en desarrollo.</p>
+html
+<main class="home-page">
+
+  <!-- Hojas decorativas -->
+  <svg class="leaf-decor leaf-a" viewBox="0 0 100 130" aria-hidden="true">
+    <path fill="currentColor" d="M50 2C92 32 94 88 50 128C6 88 8 32 50 2Z" />
+    <path stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none"
+      d="M50 14V120M50 40L28 56M50 40L72 56M50 66L24 84M50 66L76 84M50 92L32 106M50 92L68 106" />
+  </svg>
+
+  <svg class="leaf-decor leaf-b" viewBox="0 0 100 130" aria-hidden="true">
+    <path fill="currentColor" d="M50 2C92 32 94 88 50 128C6 88 8 32 50 2Z" />
+    <path stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none"
+      d="M50 14V120M50 40L28 56M50 40L72 56M50 66L24 84M50 66L76 84M50 92L32 106M50 92L68 106" />
+  </svg>
+
+  <svg class="leaf-decor leaf-c" viewBox="0 0 100 130" aria-hidden="true">
+    <path fill="currentColor" d="M50 2C92 32 94 88 50 128C6 88 8 32 50 2Z" />
+  </svg>
+
+  <!-- Cinta animada -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>
+        PURA VIDA <b>·</b> VOTA <b>·</b> DEBATE <b>·</b> RÍE <b>·</b> GOBIERNA <b>·</b>
+        PURA VIDA <b>·</b> VOTA <b>·</b> DEBATE <b>·</b> RÍE <b>·</b> GOBIERNA <b>·</b>
+      </span>
+      <span>
+        PURA VIDA <b>·</b> VOTA <b>·</b> DEBATE <b>·</b> RÍE <b>·</b> GOBIERNA <b>·</b>
+        PURA VIDA <b>·</b> VOTA <b>·</b> DEBATE <b>·</b> RÍE <b>·</b> GOBIERNA <b>·</b>
+      </span>
+    </div>
+  </div>
+
+
+  <div class="home-container">
+
+    <header class="topbar">
+      <span class="status-pill">
+        <span class="status-dot"></span>
+        Juego multijugador
+      </span>
+    </header>
+
+    <div class="home-layout">
+
+      <!-- Presentación -->
+      <section class="brand-section" aria-labelledby="game-title">
+
+        <div class="brand-mark">
+          <span class="brand-first">Cards for</span>
+          <span class="brand-second">
+            Democra<span class="xss-highlight">XSS</span>y
+          </span>
+        </div>
+
+        <div class="brand-divider">
+          <span></span>
+          <span class="divider-leaf">◆</span>
+          <span></span>
+        </div>
+
+        <h1 id="game-title">Cartas, risas y mucha democracia.</h1>
+
+        <!-- Cartas personalizadas -->
+        <div class="sample-cards" aria-label="Ejemplo de cartas">
+
+          <article class="sample-card question-card">
+            <span class="card-label">LA PREGUNTA</span>
+            <p>¿Qué harías si pudieras cambiar la política del país?</p>
+          </article>
+
+          <article class="sample-card answer-card">
+            <span class="card-label">UNA RESPUESTA</span>
+            <p>Un plan bien pensado... (o al menos eso dice el discurso).</p>
+          </article>
+
+          <article class="sample-card answer-card-alt">
+            <span class="card-label">OTRA RESPUESTA</span>
+            <p>Prometer mucho y firmar nada.</p>
+          </article>
+
+        </div>
+
+      </section>
+
+      <!-- Panel de acceso -->
+      <section class="entry-section" aria-labelledby="entry-title">
+
+        <div class="entry-stamp" aria-hidden="true">
+          <span>¡QUÉ</span>
+          <strong>PURA</strong>
+          <strong>VIDA!</strong>
+        </div>
+
+        <mat-card class="entry-card">
+
+          <mat-card-header class="entry-header">
+            <mat-card-title id="entry-title">
+              Empieza a jugar
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+
+            <form class="entry-form">
+
+              <div class="form-group">
+                <label for="player-name">Tu nombre</label>
+
+                <mat-form-field appearance="outline" class="material-field">
+                  <mat-label>Nombre del jugador</mat-label>
+                  <input
+                    matInput
+                    id="player-name"
+                    name="playerName"
+                    type="text"
+                    placeholder="Ej. Micaela"
+                    maxlength="24"
+                    autocomplete="nickname"
+                    required
+                  />
+                  <mat-icon matPrefix>person_outline</mat-icon>
+                </mat-form-field>
+
+                <p class="field-hint">
+                  Será visible para el resto de la partida.
+                </p>
+              </div>
+
+              <button
+                mat-flat-button
+                color="primary"
+                class="action-button primary-button"
+                type="button"
+              >
+                <mat-icon>add_circle_outline</mat-icon>
+                Crear partida
+                <span class="button-arrow">→</span>
+              </button>
+
+              <details class="join-details">
+                            <summary class="join-summary">
+              <span class="action-button secondary-button">
+                <mat-icon>meeting_room</mat-icon>
+                Unirse a una partida
+                <span class="button-arrow">→</span>
+              </span>
+            </summary>
+
+                <div class="join-fields">
+                  <mat-form-field appearance="outline" class="material-field">
+                    <mat-label>Código de la partida</mat-label>
+                    <input
+                      matInput
+                      id="room-code"
+                      name="roomCode"
+                      type="text"
+                      placeholder="Introduce el código"
+                      autocomplete="off"
+                    />
+                    <mat-icon matPrefix>vpn_key</mat-icon>
+                  </mat-form-field>
+
+                  <p class="field-hint">
+                    Pide el código a quien creó la partida.
+                  </p>
+                </div>
+              </details>
+
+            </form>
+
+            <mat-divider></mat-divider>
+
+            <div class="game-rules">
+              <div>
+                <h3>Antes de empezar</h3>
+                <p>De 4 a 22 jugadores, en número par.</p>
+                <p>Quien crea la partida es el primer soberano.</p>
+              </div>
+            </div>
+
+          </mat-card-content>
+        </mat-card>
+
+      </section>
+
+    </div>
+
+  </div>
 </main>
