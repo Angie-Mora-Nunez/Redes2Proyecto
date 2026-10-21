@@ -126,6 +126,20 @@ a:hover {
   --mdc-outlined-button-outline-color: var(--color-border);
 }
 
+header {
+  width: 100%;        /* Reduce el ancho */
+  height: auto;
+  margin: 0 auto;    /* Lo centra */
+  overflow: hidden;
+}
+
+header img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 /* Reduce animaciones según la preferencia del usuario */
 @media (prefers-reduced-motion: reduce) {
   html {
