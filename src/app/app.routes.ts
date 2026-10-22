@@ -5,5 +5,6 @@ import { LobbyG } from '../lobby-g/lobby-g';
 
 export const routes: Routes = [
   { path: '', component: Home },
-  { path: 'lobby', component: LobbyG }
+  { path: 'lobby', component: LobbyG },
+  {path: 'game',loadComponent: () => import('./features/game/game').then((m) => m.Juego),}
 ];

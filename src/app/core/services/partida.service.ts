@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
+  HttpErrorResponse,
   HttpHeaders
 } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { Vista } from '../models/game.models';
 
 const API_URL =
   'https://democraxssy.akamai.meseguercr.com/api';
@@ -86,6 +88,65 @@ export class PartidaService {
     tap(respuesta => this.guardarSesion(respuesta))
   );
 }
+
+  // ---------- Rutas con token (pantalla de juego) ----------
+
+  obtener(): Observable<Vista> {
+    return this.http.get<Vista>(
+      this.urlPartida(''),
+      { headers: this.obtenerHeadersAutorizacion() }
+    );
+  }
+
+  iniciar(): Observable<Vista> {
+    return this.http.post<Vista>(
+      this.urlPartida('/iniciar'),
+      {},
+      { headers: this.obtenerHeadersAutorizacion() }
+    );
+  }
+
+  enviarRespuesta(cartas: number[]): Observable<Vista> {
+    return this.http.put<Vista>(
+      this.urlPartida('/respuestas'),
+      { cartas },
+      { headers: this.obtenerHeadersAutorizacion() }
+    );
+  }
+
+  votar(respuestaId: string): Observable<Vista> {
+    return this.http.put<Vista>(
+      this.urlPartida('/votos'),
+      { respuesta_id: respuestaId },
+      { headers: this.obtenerHeadersAutorizacion() }
+    );
+  }
+
+  decidir(respuestaId: string): Observable<Vista> {
+    return this.http.post<Vista>(
+      this.urlPartida('/decision'),
+      { respuesta_id: respuestaId },
+      { headers: this.obtenerHeadersAutorizacion() }
+    );
+  }
+
+  avanzar(): Observable<Vista> {
+    return this.http.post<Vista>(
+      this.urlPartida('/avanzar'),
+      {},
+      { headers: this.obtenerHeadersAutorizacion() }
+    );
+  }
+
+  eliminar(): Observable<void> {
+    return this.http.delete<void>(
+      this.urlPartida(''),
+      { headers: this.obtenerHeadersAutorizacion() }
+    );
+  }
+
+  // ---------- Sesión ----------
+
   private guardarSesion(
     respuesta: RespuestaCrearPartida
   ): void {
@@ -124,6 +185,12 @@ export class PartidaService {
     }
   }
 
+  /** true si hay lo mínimo para jugar: partida y token. */
+  haySesion(): boolean {
+    const sesion = this.obtenerSesion();
+    return !!sesion?.token && !!sesion?.partidaId;
+  }
+
   obtenerHeadersAutorizacion(): HttpHeaders {
     const sesion = this.obtenerSesion();
 
@@ -140,4 +207,23 @@ export class PartidaService {
     this.sesionActual = null;
     sessionStorage.removeItem('democraxssy-sesion');
   }
+
+  // ---------- Internos ----------
+
+  private urlPartida(ruta: string): string {
+    const id = encodeURIComponent(this.obtenerSesion()?.partidaId ?? '');
+    return `${API_URL}/partidas/${id}${ruta}`;
+  }
+}
+
+/** Convierte cualquier error HTTP en un mensaje legible para el usuario. */
+export function obtenerMensajeDeError(err: unknown): string {
+  if (err instanceof HttpErrorResponse) {
+    if (err.status === 0) {
+      return 'No se pudo conectar con el servidor. Revisa la dirección del backend.';
+    }
+    const cuerpo = err.error as { error?: string } | null;
+    return cuerpo?.error ?? `Error ${err.status}`;
+  }
+  return 'Ocurrió un error inesperado.';
 }
