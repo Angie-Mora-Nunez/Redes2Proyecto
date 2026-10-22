@@ -1,0 +1,212 @@
+@if (vista(); as v) {
+  <section class="juego">
+    @if (ronda(); as r) {
+      <div class="cabecera">
+        <div class="cabecera__titulo">
+          <h2>Ronda {{ r.numero }}</h2>
+          <span class="etiqueta">Meta: {{ v.puntos_para_ganar }} pts</span>
+          @if (esSoberano()) {
+            <span class="etiqueta etiqueta--soberano">
+              <mat-icon aria-hidden="true">gavel</mat-icon> Soberano
+            </span>
+          }
+          @if (esAnfitrion()) {
+            <span class="etiqueta etiqueta--anfitrion">
+              <mat-icon aria-hidden="true">star</mat-icon> Anfitrión
+            </span>
+          }
+        </div>
+
+        <!-- Progreso de la ronda: pasos hechos, paso actual y pasos pendientes -->
+        <ol class="pasos" aria-label="Progreso de la ronda">
+          @for (paso of pasos; track paso.fase; let i = $index) {
+            <li
+              [class.activo]="i === indicePaso()"
+              [class.hecho]="i < indicePaso()"
+              [attr.aria-current]="i === indicePaso() ? 'step' : null"
+            >
+              <span class="pasos__num">{{ i + 1 }}</span>
+              <span class="pasos__texto">{{ paso.texto }}</span>
+            </li>
+          }
+        </ol>
+      </div>
+
+      <div class="cuerpo">
+        <aside class="marcador" aria-label="Marcador">
+          <h3>Marcador</h3>
+          <ul>
+            @for (j of ranking(); track j.id) {
+              <li [class.yo]="j.id === yo()?.id">
+                <span class="marcador__nombre">{{ j.nombre }}</span>
+                <span class="marcador__roles">
+                  @if (j.es_soberano) { <mat-icon title="Soberano">gavel</mat-icon> }
+                  @if (j.es_anfitrion) { <mat-icon title="Anfitrión">star</mat-icon> }
+                  @if (v.fase === Fase.RESPUESTAS && j.ya_respondio) {
+                    <mat-icon title="Ya respondió">check_circle</mat-icon>
+                  }
+                  @if (v.fase === Fase.VOTACION && j.ya_voto) {
+                    <mat-icon title="Ya votó">how_to_vote</mat-icon>
+                  }
+                </span>
+                <span class="marcador__puntos">{{ j.puntos }}</span>
+              </li>
+            }
+          </ul>
+        </aside>
+
+        <main class="mesa">
+          <mat-card class="carta-negra">
+            <mat-card-content>
+              <p class="carta-negra__texto">{{ r.carta_negra.texto }}</p>
+              <small>Elige {{ r.carta_negra.elegir }}</small>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Qué pasa y qué te toca (se anuncia a lectores de pantalla) -->
+          <p class="estado" role="status">{{ mensajeEstado() }}</p>
+
+          @switch (v.fase) {
+            @case (Fase.RESPUESTAS) {
+              @if (puedeResponder()) {
+                <div class="mano">
+                  @for (carta of mano(); track carta.id) {
+                    <button
+                      type="button"
+                      class="carta-blanca"
+                      [class.elegida]="ordenDe(carta.id) > 0"
+                      [attr.aria-pressed]="ordenDe(carta.id) > 0"
+                      (click)="alternarCarta(carta.id)"
+                    >
+                      @if (ordenDe(carta.id) > 0 && cartasPorElegir() > 1) {
+                        <span class="orden">{{ ordenDe(carta.id) }}</span>
+                      }
+                      {{ carta.texto }}
+                    </button>
+                  }
+                </div>
+              }
+            }
+
+            @case (Fase.VOTACION) {
+              <div class="respuestas">
+                @for (respuesta of r.respuestas; track respuesta.id) {
+                  <mat-card class="respuesta" [class.votada]="yo()?.mi_voto === respuesta.id">
+                    <mat-card-content>
+                      @if (respuesta.es_mia) { <span class="insignia insignia--mia">Tuya</span> }
+                      {{ respuesta.frase }}
+                    </mat-card-content>
+                    @if (!esSoberano()) {
+                      <mat-card-actions>
+                        <button
+                          mat-stroked-button
+                          type="button"
+                          [disabled]="enviando() || yo()?.mi_voto != null"
+                          (click)="votar(respuesta.id)"
+                        >
+                          {{ yo()?.mi_voto === respuesta.id ? 'Tu voto' : 'Votar' }}
+                        </button>
+                      </mat-card-actions>
+                    }
+                  </mat-card>
+                }
+              </div>
+            }
+
+            @case (Fase.DECISION) {
+              <div class="respuestas">
+                @for (respuesta of r.respuestas; track respuesta.id) {
+                  <mat-card
+                    class="respuesta"
+                    [class.favorita]="r.favoritas_del_pueblo.includes(respuesta.id)"
+                  >
+                    <mat-card-content>
+                      @if (r.favoritas_del_pueblo.includes(respuesta.id)) {
+                        <span class="insignia">Favorita del pueblo</span>
+                      }
+                      @if (respuesta.es_mia) { <span class="insignia insignia--mia">Tuya</span> }
+                      {{ respuesta.frase }}
+                      <small class="votos">{{ respuesta.votos }} voto(s)</small>
+                    </mat-card-content>
+                    @if (esSoberano()) {
+                      <mat-card-actions>
+                        <button
+                          mat-flat-button
+                          type="button"
+                          [disabled]="enviando()"
+                          (click)="decidir(respuesta.id)"
+                        >
+                          Elegir ganadora
+                        </button>
+                      </mat-card-actions>
+                    }
+                  </mat-card>
+                }
+              </div>
+            }
+
+            @case (Fase.RESULTADO) {
+              @if (respuestaGanadora(); as ganadora) {
+                <mat-card class="respuesta ganadora">
+                  <mat-card-content>
+                    <span class="insignia">Ganadora</span>
+                    {{ ganadora.frase }}
+                    @if (ganadorDeRonda(); as nombre) {
+                      <small class="votos">Punto para {{ nombre }}</small>
+                    }
+                  </mat-card-content>
+                </mat-card>
+              }
+              @if (ultimoResumen(); as resumen) {
+                <p class="aviso">
+                  {{
+                    resumen.respeto_al_pueblo
+                      ? 'El soberano respetó la voluntad del pueblo.'
+                      : 'El soberano ignoró al pueblo. ¡Democracia!'
+                  }}
+                </p>
+              }
+            }
+          }
+
+          @if (puedeResponder() || mostrarAvanzar()) {
+            <div class="acciones">
+              @if (puedeResponder()) {
+                <button
+                  mat-flat-button
+                  type="button"
+                  [disabled]="!puedeEnviar()"
+                  (click)="enviarRespuesta()"
+                >
+                  Enviar respuesta
+                </button>
+              }
+              @if (mostrarAvanzar()) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="enviando()"
+                  (click)="avanzar()"
+                >
+                  {{ textoAvanzar() }}
+                </button>
+              }
+            </div>
+          }
+          @if (mostrarAvanzar()) {
+            <p class="nota">
+              Solo el anfitrión o el soberano pueden avanzar. Tú puedes porque eres
+              {{ motivoAvanzar() }}.
+            </p>
+          }
+        </main>
+      </div>
+    } @else {
+      <p class="aviso">
+        {{ v.fase === Fase.TERMINADA ? 'La partida terminó.' : 'Esperando a que comience la ronda…' }}
+      </p>
+    }
+  </section>
+} @else {
+  <p class="aviso">Cargando partida…</p>
+}
