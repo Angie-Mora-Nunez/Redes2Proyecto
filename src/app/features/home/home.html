@@ -137,15 +137,7 @@
               </div>
 
               <!-- Crear partida -->
-               <button
-  mat-flat-button
-  color="primary"
-  type="button"
-  [disabled]="cargando"
-  (click)="crearPartida()"
->
-  {{ cargando ? 'Procesando...' : 'Crear una partida' }}
-</button>
+<button mat-flat-button color="primary" type="button" [disabled]="cargando"(click)="crearPartida()">{{ cargando ? 'Procesando...' : 'Crear una partida' }}</button>
 
 @if (mensajeExito) {
   <p class="mensaje-exito">{{ mensajeExito }}</p>

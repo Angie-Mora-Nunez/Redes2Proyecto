@@ -16,26 +16,48 @@
   </head>
   <body>
 
-<!--Sección de cards-->
+<!--Sección de cinta-->
     <section>
-      <div class="sample-cards" aria-label="Ejemplo de cartas">
+                <div class="ticker" aria-hidden="true">
+                  <div class="ticker-track">
+                    <span>
+                      PURA VIDA <b>·</b> VOTA <b>·</b> DEBATE <b>·</b> RÍE <b>·</b> GOBIERNA <b>·</b>
+                      PURA VIDA <b>·</b> VOTA <b>·</b> DEBATE <b>·</b> RÍE <b>·</b> GOBIERNA <b>·</b>
+                    </span>
+                    <span>
+                      PURA VIDA <b>·</b> VOTA <b>·</b> DEBATE <b>·</b> RÍE <b>·</b> GOBIERNA <b>·</b>
+                      PURA VIDA <b>·</b> VOTA <b>·</b> DEBATE <b>·</b> RÍE <b>·</b> GOBIERNA <b>·</b>
+                    </span>
+                  </div>
+                </div>
 
+    </section>
+
+<!--Sección de cards-->
+    <section >
+
+      <div class="gameroom">
+        <span class="gameroom-label">🎮 Código de sala:</span>
+        <span class="gameroom-id">{{ seasonId }}</span>
+      </div>
+
+   
+      <div class="sample-cards" aria-label="Cards">
               <article class="sample-card question-card">
-                <span class="card-label">Rol: Soberano</span>
-                <p>¿Qué harías si pudieras cambiar la política del país?</p>
-                <button class="btncard" > Iniciar partida</button>
+                <span class="card-label"><label class="parti">👑 Anfitrión-Soberano </label></span>
+                <p>Jugador: {{hostName}}</p>
+                   <button class="btn-iniciar">
+                      <span class="material-icons">play_arrow</span>Iniciar juego</button>
               </article>
-
-              <article class="sample-card answer-card">
-                <span class="card-label">UNA RESPUESTA</span>
-                <p>Un plan bien pensado... (o al menos eso dice el discurso).</p>
-              </article>
-
-              <article class="sample-card answer-card-alt">
-                <span class="card-label">OTRA RESPUESTA</span>
-                <p>Prometer mucho y firmar nada.</p>
-              </article>
-
+            @for (jugador of jugadores; track jugador.id) {
+               <ng-container *ngIf="!jugador.es_anfitrion"> <!--Verifica qyue no sea Anfitrión-->
+                    <article class="sample-card answer-card">
+                      <span class="card-label">♟️ Subdito</span>
+                      <p>Jugador: {{jugador.nombre}}</p>
+                    </article>
+               </ng-container>
+             }
+  
         </div>
     </section>
     <!--Fin sección de cards-->>

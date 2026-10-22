@@ -4,40 +4,42 @@ html, body {
   padding: 0;
 }
 
-/*Style cards*/
-.example-card {
-  max-width: 400px;
-  margin-left: 55px;
-  margin-top: 35px;
-  color: black;
-  font-size: large;
-  background-color: #d4e6bc;
+
+.btn-iniciar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 32px;
+  border: 1px solid #387f70;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #164a3f, #387f70);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 8px 20px rgb(22 74 63 / 20%);
+  cursor: pointer;
+  margin-top: 25px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.example-header-image {
-  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-  background-size: cover;
+.parti{
+  color: yellowgreen;
 }
 
-.buttons-card{
-   justify-content: center;
-   margin-top: 10px;
+.btn-iniciar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgb(22 74 63 / 28%);
 }
 
-.btncard{
-    
-    margin-top: 25px;
-    height: 50px;
-    width: 90px;
-    justify-content: center;
-    transition: background-color 0.3s ease; 
-    background-color: #f0f0f0;
-    cursor:pointer;
-}     
+.btn-iniciar:active {
+  transform: scale(0.98);
+}
 
-
-.btncard:hover{
-    background-color: rgb(183, 219, 171);
+.btn-iniciar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
 }
 
 :host {
@@ -50,40 +52,83 @@ html, body {
 
 /*Final style cards*/
 
-/*Cards*/
 
-.sample-cards {
+
+.gameroom {
   display: flex;
   align-items: center;
-  min-height: 275px;
-  margin: 28px 0 8px 8px;
-  padding: 12px 0 22px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 18px 24px;
+  margin: 24px auto;
+  width: fit-content;
+  max-width: calc(100% - 32px);
+  background: linear-gradient(135deg, #153d32, #285d49);
+  border: 1px solid #c5a65a;
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgb(22 74 63 / 15%);
+  box-sizing: border-box;
 }
 
+.gameroom-label {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.gameroom-id {
+  color: #f1d68c;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  overflow-wrap: anywhere;
+}
+
+
+
+
+
+
+
+
+
+/*Cards*/
+
+
+.sample-cards {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 32px;
+}
+
+
+
 .sample-card {
-  margin-top: 55px;
-  margin-left: 55px;
-  margin-right: 55px;
   position: relative;
   display: flex;
-  flex: 1 1 0;
   flex-direction: column;
-  align-self: center;
+  align-self: stretch;
   min-width: 0;
-  min-height: 215px;
+  min-height: 115px;
+  margin: 0;
   padding: 23px 19px;
   border-radius: 15px;
   box-shadow: var(--shadow-card);
+  box-sizing: border-box;
 }
 
-.sample-card + .sample-card {
-  margin-left: -20px;
-}
 
 .card-label {
   display: block;
   margin-bottom: 19px;
-  font-size: 0.62rem;
+  font-size: 20px;
   font-weight: 800;
   letter-spacing: 1.3px;
   line-height: 1.4;
@@ -91,7 +136,7 @@ html, body {
 
 .sample-card p {
   margin: 0;
-  font-size: clamp(0.83rem, 1.15vw, 1rem);
+  font-size: 20px;
   font-weight: 500;
   line-height: 1.55;
   overflow-wrap: anywhere;
@@ -131,4 +176,54 @@ html, body {
   z-index: 3;
   box-shadow: 0 22px 42px rgb(22 74 63 / 21%);
   transform: translateY(-7px) rotate(0deg);
+}
+
+.container-cards {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+
+/*  CINTA  ANIMADA*/
+
+.ticker {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  overflow: hidden;
+  padding: 11px 0;
+  color: #fffaf2;
+  background: var(--color-forest);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2.4px;
+  white-space: nowrap;
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 34s linear infinite;
+}
+
+.ticker-track span {
+  flex: 0 0 auto;
+  padding-right: 32px;
+}
+
+.ticker-track b {
+  padding: 0 9px;
+  color: #e8a99c;
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }

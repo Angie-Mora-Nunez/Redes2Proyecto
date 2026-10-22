@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { finalize } from 'rxjs';
-
+import { Router } from '@angular/router';
 import { PartidaService } from '../../core/services/partida.service';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -40,7 +40,8 @@ export class Home implements OnInit {
 
 constructor(
   private partidaService: PartidaService,
-  private cdr: ChangeDetectorRef
+  private cdr: ChangeDetectorRef,
+  private router: Router
 ) {}
 
   ngOnInit(): void {
@@ -92,7 +93,7 @@ constructor(
       this.cargando = false;
 
       this.cdr.detectChanges();
-
+      this.router.navigate(['/lobby']);
       console.log('Cargando después del éxito:', this.cargando);
     },
 
@@ -131,6 +132,7 @@ constructor(
           this.cargando = false;
           this.mensajeExito = 'Te uniste a la partida correctamente.';
 
+          this.router.navigate(['/lobby']);
           console.log('Respuesta al unirse:', respuesta);
         },
         error: (error: HttpErrorResponse) => {
