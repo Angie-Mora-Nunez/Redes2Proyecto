@@ -1,0 +1,10 @@
+.home-page {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+  color: var(--color-ink);
+  background:
+    radial-gradient(ellipse at 10% 12%, #dce9df 0%, transparent 42%),
+    linear-gradient(135deg, #f5f4eb 0%, #e5eee6 52%, #d7e5dc 100%);
+}

@@ -37,20 +37,96 @@
   box-sizing: border-box;
 }
 
+.home-page {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+  color: var(--color-ink);
+  background:
+    radial-gradient(ellipse at 10% 12%, #dce9df 0%, transparent 42%),
+    linear-gradient(135deg, #f5f4eb 0%, #e5eee6 52%, #d7e5dc 100%);
+}
+
+.fondo-app {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  width: 100%;
+  color: var(--color-ink);
+  background:
+    radial-gradient(ellipse at 10% 12%, #dce9df 0%, transparent 42%),
+    linear-gradient(135deg, #f5f4eb 0%, #e5eee6 52%, #d7e5dc 100%);
+}
+
+
+
+.leaf-decor {
+  position: absolute;
+  z-index: -1;
+  width: 100px;
+  height: 130px;
+  color: #9ebcac;
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.leaf-a {
+  top: 17%;
+  left: -28px;
+  transform: rotate(-24deg);
+}
+
+.leaf-b {
+  right: -24px;
+  bottom: 12%;
+  transform: rotate(30deg);
+}
+
+.leaf-c {
+  top: 8%;
+  right: 14%;
+  width: 62px;
+  height: 81px;
+  color: var(--color-coral);
+  opacity: 0.14;
+  transform: rotate(28deg);
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
+
 html {
   min-height: 100%;
   scroll-behavior: smooth;
 }
+
 
 body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
   color: var(--color-ink);
-  background: var(--color-background);
+  background:
+    radial-gradient(ellipse at 10% 12%, #dce9df 0%, transparent 42%),
+    linear-gradient(135deg, #f5f4eb 0%, #e5eee6 52%, #d7e5dc 100%);
   font: 16px/1.5 var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
+
 
 /* Elementos básicos */
 button,
@@ -194,6 +270,44 @@ header img {
   line-height: 1;
   animation: arrow-bounce 1.8s ease-in-out infinite;
 }
+
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #f5f4eb 0%,
+    #e5eee6 52%,
+    #d7e5dc 100%
+  ) !important;
+}
+
+.fondo-app {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    #f5f4eb 0%,
+    #e5eee6 52%,
+    #d7e5dc 100%
+  ) !important;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
+
+
+
 
 @keyframes arrow-bounce {
   0%, 100% {

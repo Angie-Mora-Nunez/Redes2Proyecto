@@ -1,0 +1,134 @@
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/*Style cards*/
+.example-card {
+  max-width: 400px;
+  margin-left: 55px;
+  margin-top: 35px;
+  color: black;
+  font-size: large;
+  background-color: #d4e6bc;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.buttons-card{
+   justify-content: center;
+   margin-top: 10px;
+}
+
+.btncard{
+    
+    margin-top: 25px;
+    height: 50px;
+    width: 90px;
+    justify-content: center;
+    transition: background-color 0.3s ease; 
+    background-color: #f0f0f0;
+    cursor:pointer;
+}     
+
+
+.btncard:hover{
+    background-color: rgb(183, 219, 171);
+}
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 10% 12%, #dce9df 0%, transparent 42%),
+    linear-gradient(135deg, #f5f4eb 0%, #e5eee6 52%, #d7e5dc 100%);
+}
+
+/*Final style cards*/
+
+/*Cards*/
+
+.sample-cards {
+  display: flex;
+  align-items: center;
+  min-height: 275px;
+  margin: 28px 0 8px 8px;
+  padding: 12px 0 22px;
+}
+
+.sample-card {
+  margin-top: 55px;
+  margin-left: 55px;
+  margin-right: 55px;
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-self: center;
+  min-width: 0;
+  min-height: 215px;
+  padding: 23px 19px;
+  border-radius: 15px;
+  box-shadow: var(--shadow-card);
+}
+
+.sample-card + .sample-card {
+  margin-left: -20px;
+}
+
+.card-label {
+  display: block;
+  margin-bottom: 19px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+  line-height: 1.4;
+}
+
+.sample-card p {
+  margin: 0;
+  font-size: clamp(0.83rem, 1.15vw, 1rem);
+  font-weight: 500;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.question-card {
+  z-index: 2;
+  color: #fffdf5;
+  background-color: #498063;
+}
+
+.question-card .card-label {
+  color: #b8d8c7;
+}
+
+.answer-card {
+  z-index: 1;
+  color: var(--color-fores);
+  background: var(--color-cream);
+}
+
+.answer-card .card-label {
+  color: var(--color-jade);
+}
+
+.answer-card-alt {
+  z-index: 0;
+  color: var(--color-forest);
+  background: #e7c9bb;
+}
+
+.answer-card-alt .card-label {
+  color: #795347;
+}
+
+.sample-card:hover {
+  z-index: 3;
+  box-shadow: 0 22px 42px rgb(22 74 63 / 21%);
+  transform: translateY(-7px) rotate(0deg);
+}
