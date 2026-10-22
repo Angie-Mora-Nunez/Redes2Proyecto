@@ -153,4 +153,76 @@ header img {
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
+
+}
+
+
+/* ====================================
+   PANTALLA DE BIENVENIDA
+   ==================================== */
+
+
+/* Invitación a deslizar */
+.scroll-indicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 24px;
+  background: rgb(246 243 232 / 90%);
+  color: #164a3f;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 6px 20px rgb(22 74 63 / 10%);
+  z-index: 2;
+}
+
+.scroll-indicator:hover {
+  background: #fff;
+  color: #164a3f;
+}
+
+.scroll-arrow {
+  font-size: 1.8rem;
+  line-height: 1;
+  animation: arrow-bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes arrow-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+/* Destino del desplazamiento */
+#inicio-juego {
+  scroll-margin-top: 0;
+}
+
+/* Adaptación para móviles */
+@media (max-width: 600px) {
+  .scroll-indicator {
+    bottom: 22px;
+    width: max-content;
+    max-width: 90%;
+    font-size: 0.75rem;
+  }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-arrow {
+    animation: none;
+  }
 }
