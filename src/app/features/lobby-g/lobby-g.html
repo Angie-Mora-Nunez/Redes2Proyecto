@@ -30,36 +30,53 @@
                     </span>
                   </div>
                 </div>
-
     </section>
 
-<!--Sección de cards-->
-    <section >
-
+<!--Sección de code-->
+  <section >
       <div class="gameroom">
         <span class="gameroom-label">🎮 Código de sala:</span>
         <span class="gameroom-id">{{ seasonId }}</span>
       </div>
+  </section>
 
-   
-      <div class="sample-cards" aria-label="Cards">
-              <article class="sample-card question-card">
-                <span class="card-label"><label class="parti">👑 Anfitrión-Soberano </label></span>
-                <p>Jugador: {{hostName}}</p>
-                   <button class="btn-iniciar">
-                      <span class="material-icons">play_arrow</span>Iniciar juego</button>
-              </article>
-            @for (jugador of jugadores; track jugador.id) {
-               <ng-container *ngIf="!jugador.es_anfitrion"> <!--Verifica qyue no sea Anfitrión-->
-                    <article class="sample-card answer-card">
-                      <span class="card-label">♟️ Subdito</span>
-                      <p>Jugador: {{jugador.nombre}}</p>
-                    </article>
-               </ng-container>
-             }
-  
+<!--Sección de cards-->
+  <section>
+        <div class="sample-cards" aria-label="Jugadores de la sala">
+            <article class="sample-card question-card">
+                <span class="card-label">👑 Anfitrión-Soberano</span>
+                <p>Jugador: {{ hostName }}</p> <!--el nombre del host-->
+                    @if (esAnfitrion) {
+                      <button
+  mat-raised-button
+  color="primary"
+  *ngIf="esAnfitrion"
+  [disabled]="startSeason"
+  (click)="iniciarPartida()"
+>
+  {{ startSeason ? 'Iniciando partida...' : 'Iniciar partida' }}
+</button>
+
+<p *ngIf="error" class="error">
+  {{ error }}
+</p>
+                        <button routerLink="/game" class="btn-iniciar">
+                        <span class="material-icons">play_arrow</span>Iniciar juego</button>
+                    }<!--metodo que declara un boton y lo coloca en solo la pantalla del anfitrion-->
+            </article>
+
+              @for (jugador of jugadores; track jugador.id) {
+                @if (!jugador.es_anfitrion) {
+                  <article class="sample-card answer-card">
+                    <span class="card-label">♟️ Súbdito</span>
+                    <p>Jugador: {{ jugador.nombre }}</p>
+                  </article>
+                }<!--Crea cards según el número de personas que se unan-->
+              }
+
         </div>
-    </section>
-    <!--Fin sección de cards-->>
+
+  </section>
+    <!--Fin sección de cards-->
   </body>
 </html>

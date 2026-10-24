@@ -288,6 +288,48 @@ body {
   ) !important;
 }
 
+/*  CINTA  ANIMADA*/
+
+.ticker {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  overflow: hidden;
+  padding: 11px 0;
+  color: #fffaf2;
+  background: var(--color-forest);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2.4px;
+  white-space: nowrap;
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 34s linear infinite;
+}
+
+.ticker-track span {
+  flex: 0 0 auto;
+  padding-right: 32px;
+}
+
+.ticker-track b {
+  padding: 0 9px;
+  color: #e8a99c;
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 .fondo-app {
   position: relative;
   min-height: 100vh;
