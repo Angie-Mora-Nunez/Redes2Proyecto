@@ -13,12 +13,18 @@ import { CommonModule } from '@angular/common';
 export class LobbyG implements OnInit {
   seasonId = '';
   hostName = '';
+  code = Math.floor(1000 + Math.random() * 9000).toString;
+
 
       jugadores: {
         id: string;
         nombre: string;
         es_anfitrion: boolean;
       }[] = [];
+
+ 
+
+
 
   constructor(
     private partidaService: PartidaService,
@@ -51,4 +57,7 @@ export class LobbyG implements OnInit {
       console.log('Jugadores que se han unidp:', sesion.partida.jugadores);
       console.log('Cantidad de jugadores unidos:', sesion.partida.jugadores.length);
   }
+
+
+
 }
