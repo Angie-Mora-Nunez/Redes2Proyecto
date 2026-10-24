@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders
-} from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Vista } from '../models/game.models';
-
-const API_URL =
-  'https://democraxssy.akamai.meseguercr.com/api';
 
 export interface RespuestaCrearPartida {
   partida_id: string;
@@ -48,49 +41,65 @@ export interface SesionPartida {
   partida: RespuestaCrearPartida['partida'];
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class PartidaService {
-  private sesionActual: SesionPartida | null = null;
+private apiUrl = localStorage.getItem('democraxssy-servidor') ?? '';
+private sesionActual: SesionPartida | null = null;
 
   constructor(private http: HttpClient) {}
 
-  comprobarServicio(): Observable<void> {
-    return this.http.head<void>(`${API_URL}/salud`);
+  // Conexión al servidor.
+comprobarServicio(direccion: string): Observable<void> {
+  const urlApi = this.prepararDireccion(direccion);
+  return this.http.head<void>(`${urlApi}/salud`);
+}
+
+  guardarServidor(direccion: string): void {
+  const nuevaApiUrl = this.prepararDireccion(direccion);
+  if (nuevaApiUrl !== this.apiUrl) {
+    this.limpiarSesion();
+  }
+  this.apiUrl = nuevaApiUrl;
+  localStorage.setItem('democraxssy-servidor', this.apiUrl);
+}
+
+  obtenerServidor(): string {
+    return this.apiUrl;
   }
 
-  crearPartida(
-    nombre: string,
-    puntosParaGanar = 5
-  ): Observable<RespuestaCrearPartida> {
+  private prepararDireccion(direccion: string): string {
+    try {
+      const url = new URL(direccion.trim());
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+        throw new Error('Protocolo no válido.');
+      }
+      return `${url.origin}/api`;
+    } catch {
+      throw new Error('Ingresá una dirección válida que comience con http:// o https://.');
+    }
+  }
+
+  // Crear y unirse.
+  crearPartida(nombre: string, puntosParaGanar: number): Observable<RespuestaCrearPartida> {
     return this.http.post<RespuestaCrearPartida>(
-      `${API_URL}/partidas`,
+      `${this.apiUrl}/partidas`,
       {
-        nombre,
+        nombre: nombre.trim(),
         puntos_para_ganar: puntosParaGanar
       }
-    ).pipe(
-      tap(respuesta => {
-        this.guardarSesion(respuesta);
-      })
     );
   }
 
-  unirsePartida(
-  id: string,
-  nombre: string
-): Observable<RespuestaCrearPartida> {
-  return this.http.post<RespuestaCrearPartida>(
-    `${API_URL}/partidas/${encodeURIComponent(id)}/jugadores`,
-    { nombre }
-  ).pipe(
-    tap(respuesta => this.guardarSesion(respuesta))
-  );
-}
+  unirsePartida(id: string, nombre: string): Observable<RespuestaCrearPartida> {
+    const idSinEspacios = id.trim();
+    const codigo = encodeURIComponent(idSinEspacios);
+    return this.http.post<RespuestaCrearPartida>(
+      `${this.apiUrl}/partidas/${codigo}/jugadores`,
+      { nombre: nombre.trim() }
+    );
+  }
 
-  // ---------- Rutas con token (pantalla de juego) ----------
-
+  // Acciones de la partida.
   obtener(): Observable<Vista> {
     return this.http.get<Vista>(
       this.urlPartida(''),
@@ -145,59 +154,44 @@ export class PartidaService {
     );
   }
 
-  // ---------- Sesión ----------
-
-  private guardarSesion(
-    respuesta: RespuestaCrearPartida
-  ): void {
+  // Sesión del jugador.
+  guardarSesion(respuesta: RespuestaCrearPartida): void {
     this.sesionActual = {
       partidaId: respuesta.partida_id,
       jugadorId: respuesta.jugador_id,
       token: respuesta.token,
       partida: respuesta.partida
     };
-
-    sessionStorage.setItem(
-      'democraxssy-sesion',
-      JSON.stringify(this.sesionActual)
-    );
+    sessionStorage.setItem('democraxssy-sesion', JSON.stringify(this.sesionActual));
   }
 
   obtenerSesion(): SesionPartida | null {
     if (this.sesionActual) {
       return this.sesionActual;
     }
-
-    const guardada = sessionStorage.getItem(
-      'democraxssy-sesion'
-    );
-
-    if (!guardada) {
+    const guardada = sessionStorage.getItem('democraxssy-sesion');
+    if (guardada === null) {
       return null;
     }
-
     try {
-      this.sesionActual = JSON.parse(guardada) as SesionPartida;
+      this.sesionActual = JSON.parse(guardada);
       return this.sesionActual;
     } catch {
-      sessionStorage.removeItem('democraxssy-sesion');
+      this.limpiarSesion();
       return null;
     }
   }
 
-  /** true si hay lo mínimo para jugar: partida y token. */
   haySesion(): boolean {
     const sesion = this.obtenerSesion();
-    return !!sesion?.token && !!sesion?.partidaId;
+    return !!sesion?.partidaId && !!sesion?.jugadorId && !!sesion?.token;
   }
 
   obtenerHeadersAutorizacion(): HttpHeaders {
     const sesion = this.obtenerSesion();
-
     if (!sesion?.token) {
-      throw new Error('No hay un token de sesión disponible.');
+      throw new Error('No hay una sesión de jugador disponible.');
     }
-
     return new HttpHeaders({
       Authorization: `Bearer ${sesion.token}`
     });
@@ -208,22 +202,28 @@ export class PartidaService {
     sessionStorage.removeItem('democraxssy-sesion');
   }
 
-  // ---------- Internos ----------
-
   private urlPartida(ruta: string): string {
-    const id = encodeURIComponent(this.obtenerSesion()?.partidaId ?? '');
-    return `${API_URL}/partidas/${id}${ruta}`;
+    const sesion = this.obtenerSesion();
+    if (!sesion?.partidaId) {
+      throw new Error('No hay una partida guardada.');
+    }
+    const codigo = encodeURIComponent(sesion.partidaId);
+    return `${this.apiUrl}/partidas/${codigo}${ruta}`;
   }
 }
 
-/** Convierte cualquier error HTTP en un mensaje legible para el usuario. */
-export function obtenerMensajeDeError(err: unknown): string {
-  if (err instanceof HttpErrorResponse) {
-    if (err.status === 0) {
-      return 'No se pudo conectar con el servidor. Revisa la dirección del backend.';
+export function obtenerMensajeDeError(error: unknown): string {
+  if (error instanceof HttpErrorResponse) {
+    if (error.status === 0) {
+      return 'No se pudo conectar con el servidor. Revisá la dirección y tu conexión.';
     }
-    const cuerpo = err.error as { error?: string } | null;
-    return cuerpo?.error ?? `Error ${err.status}`;
+    if (typeof error.error?.error === 'string') {
+      return error.error.error;
+    }
+    return `El servidor respondió con el error ${error.status}.`;
+  }
+  if (error instanceof Error) {
+    return error.message;
   }
   return 'Ocurrió un error inesperado.';
 }

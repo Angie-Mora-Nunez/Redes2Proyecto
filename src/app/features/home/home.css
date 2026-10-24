@@ -403,9 +403,6 @@
   min-width: 0;
 }
 
-.entry-form .mat-mdc-form-field-subscript-wrapper {
-  display: none;
-}
 
 .entry-form .mat-mdc-text-field-wrapper {
   background: rgb(255 255 255 / 78%);
@@ -692,4 +689,36 @@
   .ticker-track {
     animation: none;
   }
+}
+
+/* Mensajes de error de los campos */
+.entry-form mat-error {
+  color: #c62828;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Mensaje de error */
+.form-message.error-message {
+  color: #b42318;
+  background: #fff0ee;
+  border: 1px solid #f3b6ae;
+  border-left: 4px solid #d92d20;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Mensaje de éxito */
+.form-message.success-message {
+  color: #176b46;
+  background: #e5f5eb;
+  border: 1px solid #a6d9b8;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
 }

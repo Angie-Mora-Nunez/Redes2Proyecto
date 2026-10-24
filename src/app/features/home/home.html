@@ -1,7 +1,5 @@
 
 <main class="home-page">
-
-  <!-- Hojas decorativas -->
   <svg class="leaf-decor leaf-a" viewBox="0 0 100 130" aria-hidden="true">
     <path fill="currentColor" d="M50 2C92 32 94 88 50 128C6 88 8 32 50 2Z" />
     <path stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none"
@@ -18,11 +16,11 @@
     <path fill="currentColor" d="M50 2C92 32 94 88 50 128C6 88 8 32 50 2Z" />
   </svg>
 
-
+  
   <div class="home-container">
-
     <div class="home-layout">
 
+      <!-- Presentación del juego -->
       <section class="brand-section" aria-labelledby="game-title">
 
         <div class="brand-mark">
@@ -38,9 +36,10 @@
           <span></span>
         </div>
 
-        <h1 id="game-title">Cartas, risas y mucha democracia.</h1>
+        <h1 id="game-title">
+          Cartas, risas y mucha democracia.
+        </h1>
 
-        <!-- Cartas personalizadas -->
         <div class="sample-cards" aria-label="Ejemplo de cartas">
 
           <article class="sample-card question-card">
@@ -59,10 +58,9 @@
           </article>
 
         </div>
-
       </section>
 
-      <!-- Panel de acceso -->
+      <!-- Formulario de entrada -->
       <section class="entry-section" aria-labelledby="entry-title">
 
         <div class="entry-stamp" aria-hidden="true">
@@ -75,13 +73,23 @@
 
           <mat-card-header class="entry-header">
             <mat-card-title id="entry-title">
-              Empieza a jugar
+
+              @if (!servicioDisponible) {
+                Conectar al servidor
+              } @else if (opcion === 'crear') {
+                Crear una partida
+              } @else if (opcion === 'unirse') {
+                Unirse a una partida
+              } @else {
+                ¿Qué querés hacer?
+              }
+
             </mat-card-title>
           </mat-card-header>
 
           <mat-card-content>
 
-            <!-- Mensajes de error y éxito -->
+            <!-- Mensajes del frontend y backend -->
             @if (mensajeError) {
               <div class="form-message error-message" role="alert">
                 {{ mensajeError }}
@@ -94,114 +102,176 @@
               </div>
             }
 
-            <form class="entry-form" (ngSubmit)="crearPartida()">
+            <!-- Conexión al servidor -->
+            @if (!servicioDisponible) {
 
-              <!-- Nombre del jugador -->
-              <div class="form-group">
-                <label for="player-name">Tu nombre</label>
+              <form class="entry-form" (ngSubmit)="conectar()">
 
                 <mat-form-field appearance="outline" class="material-field">
-                  <mat-label>Nombre del jugador</mat-label>
+                  <mat-label>Dirección del servidor</mat-label>
 
                   <input
                     matInput
-                    id="player-name"
-                    name="playerName"
+                    name="direccionServidor"
                     type="text"
-                    placeholder="Ej. Micaela"
+                    placeholder="https://servidor.com/#/"
+                    autocomplete="off"
+                    spellcheck="false"
+                    [(ngModel)]="direccionServidor"
+                    [disabled]="cargando"
+                    required
+                  />
+
+                  <mat-icon matPrefix>dns</mat-icon>
+                </mat-form-field>
+
+                <button
+                  mat-flat-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="cargando"
+                >
+                  {{ cargando ? 'Conectando...' : 'Conectar' }}
+                </button>
+
+              </form>
+
+            } @else if (opcion === '') {
+
+              <!-- Elegir entre crear y unirse -->
+              <div class="entry-form">
+
+                <button
+                  mat-flat-button
+                  color="primary"
+                  type="button"
+                  [disabled]="cargando"
+                  (click)="cambiarOpcion('crear')"
+                >
+                  <mat-icon>add</mat-icon>
+                  Crear una partida
+                </button>
+
+                <button
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="cargando"
+                  (click)="cambiarOpcion('unirse')"
+                >
+                  <mat-icon>meeting_room</mat-icon>
+                  Unirse a una partida
+                </button>
+
+              </div>
+
+            } @else {
+
+              <!-- Datos del jugador -->
+              <div class="entry-form">
+
+                <mat-form-field appearance="outline" class="material-field">
+                  <mat-label>Tu nombre</mat-label>
+
+                  <input
+                    matInput
+                    name="nombreJugador"
+                    type="text"
+                    placeholder="Ej. Vero"
                     maxlength="24"
                     autocomplete="nickname"
-                    required
                     [(ngModel)]="nombreJugador"
+                    [disabled]="cargando"
+                    required
                   />
 
                   <mat-icon matPrefix>person_outline</mat-icon>
                 </mat-form-field>
 
-                <p class="field-hint">
-                  Será visible para el resto de la partida.
-                </p>
-              </div>
+                <!-- Crear partida -->
+                @if (opcion === 'crear') {
 
-              <!-- Crear partida -->
-<button mat-flat-button color="primary" type="button" [disabled]="cargando"(click)="crearPartida()">{{ cargando ? 'Procesando...' : 'Crear una partida' }}</button>
+                  <mat-form-field appearance="outline" class="material-field">
+                    <mat-label>Puntos para ganar</mat-label>
 
-@if (mensajeExito) {
-  <p class="mensaje-exito">{{ mensajeExito }}</p>
-}
+                    <input
+                      matInput
+                      name="puntosParaGanar"
+                      type="number"
+                      min="1"
+                      max="20"
+                      step="1"
+                      placeholder="Entre 1 y 20"
+                      [(ngModel)]="puntosParaGanar"
+                      [disabled]="cargando"
+                      required
+                    />
 
-@if (mensajeError) {
-  <p class="mensaje-error">{{ mensajeError }}</p>
-}
+                    <mat-icon matPrefix>emoji_events</mat-icon>
+                  </mat-form-field>
 
-              <!-- Unirse a una partida -->
-              <details class="join-details">
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    type="button"
+                    [disabled]="cargando"
+                    (click)="crearPartida()"
+                  >
+                    {{ cargando ? 'Creando...' : 'Crear partida' }}
+                  </button>
 
-                <summary class="join-summary">
-                  <span class="action-button secondary-button">
-                    <mat-icon>meeting_room</mat-icon>
-                    Unirse a una partida
-                    <span class="button-arrow">→</span>
-                  </span>
-                </summary>
+                } @else if (opcion === 'unirse') {
 
-                <div class="join-fields">
-
+                  <!-- Unirse a partida -->
                   <mat-form-field appearance="outline" class="material-field">
                     <mat-label>Código de la partida</mat-label>
 
                     <input
                       matInput
-                      id="room-code"
-                      name="roomCode"
+                      name="codigoPartida"
                       type="text"
-                      placeholder="Introduce el código"
+                      placeholder="Pegá el código de la partida"
                       autocomplete="off"
+                      spellcheck="false"
                       [(ngModel)]="codigoPartida"
+                      [disabled]="cargando"
+                      required
                     />
 
                     <mat-icon matPrefix>vpn_key</mat-icon>
                   </mat-form-field>
 
-                  <p class="field-hint">
-                    Pide el código a quien creó la partida.
-                  </p>
-
-                  <!-- Botón para confirmar y unirse -->
                   <button
                     mat-flat-button
+                    color="primary"
                     type="button"
-                    class="action-button secondary-button"
                     [disabled]="cargando"
                     (click)="unirsePartida()"
                   >
-                    <mat-icon>meeting_room</mat-icon>
-                    {{ cargando ? 'Procesando...' : 'Confirmar y unirse' }}
-                    <span class="button-arrow">→</span>
+                    {{ cargando ? 'Ingresando...' : 'Unirse' }}
                   </button>
 
-                </div>
+                }
 
-              </details>
+                <!-- Volver al menú -->
+                <button
+                  mat-button
+                  type="button"
+                  [disabled]="cargando"
+                  (click)="cambiarOpcion('')"
+                >
+                  <mat-icon>arrow_back</mat-icon>
+                  Volver
+                </button>
 
-            </form>
-
-            <mat-divider></mat-divider>
-
-            <!-- Reglas del juego -->
-            <div class="game-rules">
-              <div>
-                <h3>Antes de empezar</h3>
-                <p>De 4 a 22 jugadores, en número par.</p>
-                <p>Quien crea la partida es el primer soberano.</p>
               </div>
-            </div>
+            }
 
           </mat-card-content>
+
         </mat-card>
 
       </section>
 
     </div>
-
   </div>
+</main>
