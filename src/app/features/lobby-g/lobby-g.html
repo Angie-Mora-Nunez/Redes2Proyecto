@@ -47,21 +47,9 @@
                 <span class="card-label">👑 Anfitrión-Soberano</span>
                 <p>Jugador: {{ hostName }}</p> <!--el nombre del host-->
                     @if (esAnfitrion) {
-                      <button
-  mat-raised-button
-  color="primary"
-  *ngIf="esAnfitrion"
-  [disabled]="startSeason"
-  (click)="iniciarPartida()"
->
-  {{ startSeason ? 'Iniciando partida...' : 'Iniciar partida' }}
-</button>
-
-<p *ngIf="error" class="error">
-  {{ error }}
-</p>
-                        <button routerLink="/game" class="btn-iniciar">
-                        <span class="material-icons">play_arrow</span>Iniciar juego</button>
+                      <button class="btn-iniciar" *ngIf="esAnfitrion" [disabled]="startSeason"(click)="startGame()">
+                          {{ startSeason ? 'Iniciando partida...' : 'Iniciar partida' }}</button>
+                            <p *ngIf="error" class="error">{{ error }}</p>
                     }<!--metodo que declara un boton y lo coloca en solo la pantalla del anfitrion-->
             </article>
 

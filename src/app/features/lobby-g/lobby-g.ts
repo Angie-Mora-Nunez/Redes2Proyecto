@@ -50,28 +50,19 @@ addCode(): void {
 //..................
 
 
-iniciarPartida(): void {
+startGame(): void {
   if (!this.esAnfitrion || this.startSeason) {
-    return;
-  }
+    return;}
 
-  if (
-    this.jugadores.length < 4 ||
-    this.jugadores.length > 22 ||
-    this.jugadores.length % 2 !== 0
-  ) {
-    this.error =
-      'Se necesitan entre 4 y 22 jugadores y la cantidad debe ser par.';
-    return;
-  }
+  if (this.jugadores.length < 4 ||this.jugadores.length > 22 ||this.jugadores.length % 2 !== 0) {
+    this.error ='Se necesitan entre 4 y 22 jugadores y la cantidad debe ser par.';
+    return;}
 
   this.startSeason = true;
   this.error = '';
 
   this.partidaService.iniciar().subscribe({
-    next: () => {
-      this.router.navigate(['/game']);
-    },
+    next: () => {this.router.navigate(['/game']);},
     error: (error) => {
       this.error =
         error.error?.error ?? 'No se pudo iniciar la partida.';
@@ -79,7 +70,7 @@ iniciarPartida(): void {
       this.cdr.detectChanges();
     }
   });
-}
+}//metodo de iniciar partida
 
 saveCode(seasonId: string): void {
   const codes = this.generateCode();
@@ -104,9 +95,8 @@ saveCode(seasonId: string): void {
     this.actualizarJugadores(sesion.partida.jugadores);
 
    if (sesion.partida.fase !== 'sala') {
-   this.router.navigate(['/game']);
-   return;
- }
+        this.router.navigate(['/game']);
+        return;} // metodo que manda a todos a la sala de juego 
 
 
 
