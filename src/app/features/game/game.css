@@ -1,7 +1,6 @@
-:host { display: block; }
-
-/* Botones y tarjetas de Material con los colores y la fuente de la página */
-.juego {
+host { display: block; }
+ 
+.game {
   --mat-sys-primary: var(--color-jade);
   --mat-sys-on-primary: #fff;
   --mat-sys-on-surface: var(--color-ink);
@@ -14,95 +13,91 @@
   margin: 0 auto;
   padding: clamp(.75rem, 3vw, 1.75rem);
 }
-
-/* Encabezado */
-.cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; }
-.cabecera__titulo { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
-.cabecera h2 { margin: 0 .5rem 0 0; font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 2.6rem); font-weight: 400; }
-.etiqueta {
+ 
+.game-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; }
+.game-header__title { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.game-header h2 { margin: 0 .5rem 0 0; font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 2.6rem); font-weight: 400; }
+.tag {
   display: inline-flex; align-items: center; gap: .25rem; padding: .2rem .7rem;
   border-radius: var(--radius-large); background: var(--color-sage);
   color: var(--color-forest); font-size: .85rem; font-weight: 600;
 }
-.etiqueta mat-icon { width: 1rem; height: 1rem; font-size: 1rem; }
-.etiqueta--soberano { background: var(--color-coral); color: var(--color-ink); }
-.etiqueta--anfitrion { background: var(--color-cream); border: 1px solid var(--color-border); }
-
-/* Barra de progreso de la ronda */
-.pasos { display: flex; gap: .25rem; margin: 0; padding: 0; list-style: none; font-size: .8rem; }
-.pasos li { display: flex; align-items: center; gap: .35rem; padding: .25rem .6rem; border-radius: var(--radius-large); color: var(--color-muted); }
-.pasos__num { display: grid; place-items: center; width: 1.4rem; height: 1.4rem; border: 1px solid var(--color-border); border-radius: 50%; font-weight: 700; }
-.pasos .hecho { color: var(--color-jade); }
-.pasos .activo { background: var(--color-forest); color: var(--color-cream); }
-.pasos .activo .pasos__num { background: var(--color-cream); color: var(--color-forest); border-color: transparent; }
-@media (max-width: 600px) { .pasos li:not(.activo) .pasos__texto { display: none; } }
-
-/* Marcador a la izquierda y mesa a la derecha; una sola columna en pantallas chicas */
-.cuerpo { display: grid; grid-template-columns: minmax(200px, 260px) minmax(0, 1fr); gap: 1.5rem; margin-top: 1.25rem; align-items: start; }
-.marcador {
+.tag mat-icon { width: 1rem; height: 1rem; font-size: 1rem; }
+.tag--sovereign { background: var(--color-coral); color: var(--color-ink); }
+.tag--host { background: var(--color-cream); border: 1px solid var(--color-border); }
+ 
+.steps { display: flex; gap: .25rem; margin: 0; padding: 0; list-style: none; font-size: .8rem; }
+.steps li { display: flex; align-items: center; gap: .35rem; padding: .25rem .6rem; border-radius: var(--radius-large); color: var(--color-muted); }
+.steps__number { display: grid; place-items: center; width: 1.4rem; height: 1.4rem; border: 1px solid var(--color-border); border-radius: 50%; font-weight: 700; }
+.steps .done { color: var(--color-jade); }
+.steps .active { background: var(--color-forest); color: var(--color-cream); }
+.steps .active .steps__number { background: var(--color-cream); color: var(--color-forest); border-color: transparent; }
+@media (max-width: 600px) { .steps li:not(.active) .steps__text { display: none; } }
+ 
+.game-body { display: grid; grid-template-columns: minmax(200px, 260px) minmax(0, 1fr); gap: 1.5rem; margin-top: 1.25rem; align-items: start; }
+.scoreboard {
   position: sticky; top: 1rem; padding: 1rem; background: var(--color-surface);
   border: 1px solid var(--color-border); border-radius: var(--radius-medium); box-shadow: var(--shadow-card);
 }
-.marcador h3 { margin: 0 0 .5rem; font-size: 1rem; }
-.marcador ul { margin: 0; padding: 0; list-style: none; }
-.marcador li { display: flex; align-items: center; gap: .5rem; padding: .4rem .5rem; border-radius: var(--radius-small); }
-.marcador li.yo { background: var(--color-cream); font-weight: 700; }
-.marcador__nombre { flex: 1; min-width: 0; overflow-wrap: anywhere; }
-.marcador__roles { display: inline-flex; gap: .15rem; color: var(--color-jade); }
-.marcador__roles mat-icon { width: 1.1rem; height: 1.1rem; font-size: 1.1rem; }
-.marcador__puntos { min-width: 1.6rem; text-align: center; font-weight: 700; color: var(--color-forest); }
+.scoreboard h3 { margin: 0 0 .5rem; font-size: 1rem; }
+.scoreboard ul { margin: 0; padding: 0; list-style: none; }
+.scoreboard li { display: flex; align-items: center; gap: .5rem; padding: .4rem .5rem; border-radius: var(--radius-small); }
+.scoreboard li.me { background: var(--color-cream); font-weight: 700; }
+.scoreboard__name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.scoreboard__roles { display: inline-flex; gap: .15rem; color: var(--color-jade); }
+.scoreboard__roles mat-icon { width: 1.1rem; height: 1.1rem; font-size: 1.1rem; }
+.scoreboard__points { min-width: 1.6rem; text-align: center; font-weight: 700; color: var(--color-forest); }
 @media (max-width: 860px) {
-  .cuerpo { grid-template-columns: 1fr; }
-  .marcador { position: static; }
-  .marcador ul { display: flex; flex-wrap: wrap; gap: .35rem; }
-  .marcador li { border: 1px solid var(--color-border); }
+  .game-body { grid-template-columns: 1fr; }
+  .scoreboard { position: static; }
+  .scoreboard ul { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .scoreboard li { border: 1px solid var(--color-border); }
 }
-
-/* Mesa. Si la cabecera compartida es fija, define --header-height (ej: 64px) */
-.mesa { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
-.carta-negra {
+ 
+.play-area { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.black-card {
   --mat-sys-on-surface: var(--color-cream);
   --mat-sys-surface-container-low: var(--color-forest);
   position: sticky; top: calc(var(--header-height, 0px) + .5rem); z-index: 2;
   background: var(--color-forest); color: var(--color-cream);
   border-radius: var(--radius-medium); box-shadow: var(--shadow-card);
 }
-.carta-negra__texto { margin: 0 0 .35rem; font-size: clamp(1.05rem, 3.5vw, 1.4rem); font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
-.estado { margin: 0; padding: .6rem .9rem; border-left: 4px solid var(--color-jade); border-radius: var(--radius-small); background: var(--color-surface); color: var(--color-ink); font-weight: 500; }
-
-/* Cartas blancas y respuestas: se acomodan solas según el ancho disponible */
-.mano, .respuestas { display: grid; gap: .85rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); }
-.respuestas { grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
-.carta-blanca {
+.black-card__text { margin: 0 0 .35rem; font-size: clamp(1.05rem, 3.5vw, 1.4rem); font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.status { margin: 0; padding: .6rem .9rem; border-left: 4px solid var(--color-jade); border-radius: var(--radius-small); background: var(--color-surface); color: var(--color-ink); font-weight: 500; }
+ 
+.hand, .answers { display: grid; gap: .85rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); }
+.answers { grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.white-card {
   position: relative; display: flex; align-items: flex-start; min-height: 120px; padding: 1rem;
   text-align: left; font-weight: 600; line-height: 1.3; color: var(--color-ink); background: var(--color-surface);
   border: 2px solid var(--color-border); border-radius: var(--radius-medium); box-shadow: var(--shadow-card);
   overflow-wrap: anywhere; transition: transform .15s, border-color .15s;
 }
-.carta-blanca:hover { border-color: var(--color-jade); transform: translateY(-2px); }
-.carta-blanca.elegida { border-color: var(--color-jade); background: var(--color-cream); box-shadow: var(--focus-ring); }
-.carta-blanca.elegida::after { content: '✓'; position: absolute; right: .6rem; bottom: .4rem; color: var(--color-jade); font-weight: 700; }
-.orden {
+.white-card:hover { border-color: var(--color-jade); transform: translateY(-2px); }
+.white-card.selected { border-color: var(--color-jade); background: var(--color-cream); box-shadow: var(--focus-ring); }
+.white-card.selected::after { content: '✓'; position: absolute; right: .6rem; bottom: .4rem; color: var(--color-jade); font-weight: 700; }
+.order {
   position: absolute; top: -10px; right: -10px; display: grid; place-items: center;
   width: 26px; height: 26px; border-radius: 50%; background: var(--color-jade); color: #fff; font-weight: 700;
 }
-.respuesta { display: flex; flex-direction: column; justify-content: space-between; border: 2px solid transparent; overflow-wrap: anywhere; }
-.respuesta.votada, .respuesta.favorita { border-color: var(--color-jade); }
-.respuesta.ganadora { border-color: var(--color-coral); }
-.insignia {
+.answer { display: flex; flex-direction: column; justify-content: space-between; border: 2px solid transparent; overflow-wrap: anywhere; }
+.answer.voted, .answer.favorite, .answer.selected { border-color: var(--color-jade); }
+.answer.selected { box-shadow: var(--focus-ring); }
+.answer.winning { border-color: var(--color-coral); }
+.badge {
   display: inline-block; margin: 0 .35rem .5rem 0; padding: .1rem .55rem; border-radius: var(--radius-large);
   background: var(--color-sage); color: var(--color-forest); font-size: .75rem; font-weight: 700;
 }
-.insignia--mia { background: var(--color-cream); border: 1px solid var(--color-border); }
-.votos { display: block; margin-top: .5rem; color: var(--color-forest); font-weight: 600; }
-
-.acciones { display: flex; flex-wrap: wrap; gap: .75rem; }
-.aviso, .nota { margin: 0; color: var(--color-ink); }
-.nota { font-size: .85rem; }
+.badge--mine { background: var(--color-cream); border: 1px solid var(--color-border); }
+.votes { display: block; margin-top: .5rem; color: var(--color-forest); font-weight: 600; }
+ 
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.notice, .note { margin: 0; color: var(--color-ink); }
+.note { font-size: .85rem; }
 @media (max-width: 600px) {
-  .acciones {
+  .actions {
     position: sticky; bottom: 0; z-index: 3; margin: 0 -.75rem; padding: .75rem .75rem calc(.75rem + env(safe-area-inset-bottom));
     background: var(--color-background); border-top: 1px solid var(--color-border);
   }
-  .acciones button { flex: 1 1 100%; }
+  .actions button { flex: 1 1 100%; }
 }

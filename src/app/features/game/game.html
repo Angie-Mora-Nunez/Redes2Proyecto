@@ -1,45 +1,45 @@
 @if (vista(); as v) {
-  <section class="juego">
+  <section class="game">
     @if (ronda(); as r) {
-      <div class="cabecera">
-        <div class="cabecera__titulo">
+      <div class="game-header">
+        <div class="game-header__title">
           <h2>Ronda {{ r.numero }}</h2>
-          <span class="etiqueta">Meta: {{ v.puntos_para_ganar }} pts</span>
+          <span class="tag">Meta: {{ v.puntos_para_ganar }} pts</span>
           @if (esSoberano()) {
-            <span class="etiqueta etiqueta--soberano">
+            <span class="tag tag--sovereign">
               <mat-icon aria-hidden="true">gavel</mat-icon> Soberano
             </span>
           }
           @if (esAnfitrion()) {
-            <span class="etiqueta etiqueta--anfitrion">
+            <span class="tag tag--host">
               <mat-icon aria-hidden="true">star</mat-icon> Anfitrión
             </span>
           }
         </div>
-
+ 
         <!-- Progreso de la ronda: pasos hechos, paso actual y pasos pendientes -->
-        <ol class="pasos" aria-label="Progreso de la ronda">
+        <ol class="steps" aria-label="Progreso de la ronda">
           @for (paso of pasos; track paso.fase; let i = $index) {
             <li
-              [class.activo]="i === indicePaso()"
-              [class.hecho]="i < indicePaso()"
+              [class.active]="i === indicePaso()"
+              [class.done]="i < indicePaso()"
               [attr.aria-current]="i === indicePaso() ? 'step' : null"
             >
-              <span class="pasos__num">{{ i + 1 }}</span>
-              <span class="pasos__texto">{{ paso.texto }}</span>
+              <span class="steps__number">{{ i + 1 }}</span>
+              <span class="steps__text">{{ paso.texto }}</span>
             </li>
           }
         </ol>
       </div>
-
-      <div class="cuerpo">
-        <aside class="marcador" aria-label="Marcador">
+ 
+      <div class="game-body">
+        <aside class="scoreboard" aria-label="Marcador">
           <h3>Marcador</h3>
           <ul>
             @for (j of ranking(); track j.id) {
-              <li [class.yo]="j.id === yo()?.id">
-                <span class="marcador__nombre">{{ j.nombre }}</span>
-                <span class="marcador__roles">
+              <li [class.me]="j.id === yo()?.id">
+                <span class="scoreboard__name">{{ j.nombre }}</span>
+                <span class="scoreboard__roles">
                   @if (j.es_soberano) { <mat-icon title="Soberano">gavel</mat-icon> }
                   @if (j.es_anfitrion) { <mat-icon title="Anfitrión">star</mat-icon> }
                   @if (v.fase === Fase.RESPUESTAS && j.ya_respondio) {
@@ -49,37 +49,37 @@
                     <mat-icon title="Ya votó">how_to_vote</mat-icon>
                   }
                 </span>
-                <span class="marcador__puntos">{{ j.puntos }}</span>
+                <span class="scoreboard__points">{{ j.puntos }}</span>
               </li>
             }
           </ul>
         </aside>
-
-        <main class="mesa">
-          <mat-card class="carta-negra">
+ 
+        <main class="play-area">
+          <mat-card class="black-card">
             <mat-card-content>
-              <p class="carta-negra__texto">{{ r.carta_negra.texto }}</p>
+              <p class="black-card__text">{{ r.carta_negra.texto }}</p>
               <small>Elige {{ r.carta_negra.elegir }}</small>
             </mat-card-content>
           </mat-card>
-
+ 
           <!-- Qué pasa y qué te toca (se anuncia a lectores de pantalla) -->
-          <p class="estado" role="status">{{ mensajeEstado() }}</p>
-
+          <p class="status" role="status">{{ mensajeEstado() }}</p>
+ 
           @switch (v.fase) {
             @case (Fase.RESPUESTAS) {
               @if (puedeResponder()) {
-                <div class="mano">
+                <div class="hand">
                   @for (carta of mano(); track carta.id) {
                     <button
                       type="button"
-                      class="carta-blanca"
-                      [class.elegida]="ordenDe(carta.id) > 0"
+                      class="white-card"
+                      [class.selected]="ordenDe(carta.id) > 0"
                       [attr.aria-pressed]="ordenDe(carta.id) > 0"
                       (click)="alternarCarta(carta.id)"
                     >
                       @if (ordenDe(carta.id) > 0 && cartasPorElegir() > 1) {
-                        <span class="orden">{{ ordenDe(carta.id) }}</span>
+                        <span class="order">{{ ordenDe(carta.id) }}</span>
                       }
                       {{ carta.texto }}
                     </button>
@@ -87,13 +87,17 @@
                 </div>
               }
             }
-
+ 
             @case (Fase.VOTACION) {
-              <div class="respuestas">
+              <div class="answers">
                 @for (respuesta of r.respuestas; track respuesta.id) {
-                  <mat-card class="respuesta" [class.votada]="yo()?.mi_voto === respuesta.id">
+                  <mat-card
+                    class="answer"
+                    [class.voted]="yo()?.mi_voto === respuesta.id"
+                    [class.selected]="respuestaElegida() === respuesta.id"
+                  >
                     <mat-card-content>
-                      @if (respuesta.es_mia) { <span class="insignia insignia--mia">Tuya</span> }
+                      @if (respuesta.es_mia) { <span class="badge badge--mine">Tuya</span> }
                       {{ respuesta.frase }}
                     </mat-card-content>
                     @if (!esSoberano()) {
@@ -102,9 +106,16 @@
                           mat-stroked-button
                           type="button"
                           [disabled]="enviando() || yo()?.mi_voto != null"
-                          (click)="votar(respuesta.id)"
+                          [attr.aria-pressed]="respuestaElegida() === respuesta.id"
+                          (click)="elegirRespuesta(respuesta.id)"
                         >
-                          {{ yo()?.mi_voto === respuesta.id ? 'Tu voto' : 'Votar' }}
+                          @if (yo()?.mi_voto === respuesta.id) {
+                            Tu voto
+                          } @else if (respuestaElegida() === respuesta.id) {
+                            Elegida
+                          } @else {
+                            Elegir
+                          }
                         </button>
                       </mat-card-actions>
                     }
@@ -112,31 +123,33 @@
                 }
               </div>
             }
-
+ 
             @case (Fase.DECISION) {
-              <div class="respuestas">
+              <div class="answers">
                 @for (respuesta of r.respuestas; track respuesta.id) {
                   <mat-card
-                    class="respuesta"
-                    [class.favorita]="r.favoritas_del_pueblo.includes(respuesta.id)"
+                    class="answer"
+                    [class.favorite]="r.favoritas_del_pueblo.includes(respuesta.id)"
+                    [class.selected]="respuestaElegida() === respuesta.id"
                   >
                     <mat-card-content>
                       @if (r.favoritas_del_pueblo.includes(respuesta.id)) {
-                        <span class="insignia">Favorita del pueblo</span>
+                        <span class="badge">Favorita del pueblo</span>
                       }
-                      @if (respuesta.es_mia) { <span class="insignia insignia--mia">Tuya</span> }
+                      @if (respuesta.es_mia) { <span class="badge badge--mine">Tuya</span> }
                       {{ respuesta.frase }}
-                      <small class="votos">{{ respuesta.votos }} voto(s)</small>
+                      <small class="votes">{{ respuesta.votos }} voto(s)</small>
                     </mat-card-content>
                     @if (esSoberano()) {
                       <mat-card-actions>
                         <button
-                          mat-flat-button
+                          mat-stroked-button
                           type="button"
                           [disabled]="enviando()"
-                          (click)="decidir(respuesta.id)"
+                          [attr.aria-pressed]="respuestaElegida() === respuesta.id"
+                          (click)="elegirRespuesta(respuesta.id)"
                         >
-                          Elegir ganadora
+                          {{ respuestaElegida() === respuesta.id ? 'Elegida' : 'Elegir' }}
                         </button>
                       </mat-card-actions>
                     }
@@ -144,21 +157,21 @@
                 }
               </div>
             }
-
+ 
             @case (Fase.RESULTADO) {
               @if (respuestaGanadora(); as ganadora) {
-                <mat-card class="respuesta ganadora">
+                <mat-card class="answer winning">
                   <mat-card-content>
-                    <span class="insignia">Ganadora</span>
+                    <span class="badge">Ganadora</span>
                     {{ ganadora.frase }}
                     @if (ganadorDeRonda(); as nombre) {
-                      <small class="votos">Punto para {{ nombre }}</small>
+                      <small class="votes">Punto para {{ nombre }}</small>
                     }
                   </mat-card-content>
                 </mat-card>
               }
               @if (ultimoResumen(); as resumen) {
-                <p class="aviso">
+                <p class="notice">
                   {{
                     resumen.respeto_al_pueblo
                       ? 'El soberano respetó la voluntad del pueblo.'
@@ -168,9 +181,9 @@
               }
             }
           }
-
-          @if (puedeResponder() || mostrarAvanzar()) {
-            <div class="acciones">
+ 
+          @if (puedeResponder() || mostrarConfirmar() || mostrarAvanzar()) {
+            <div class="actions">
               @if (puedeResponder()) {
                 <button
                   mat-flat-button
@@ -179,6 +192,16 @@
                   (click)="enviarRespuesta()"
                 >
                   Enviar respuesta
+                </button>
+              }
+              @if (mostrarConfirmar()) {
+                <button
+                  mat-flat-button
+                  type="button"
+                  [disabled]="!puedeConfirmar()"
+                  (click)="confirmar()"
+                >
+                  {{ textoConfirmar() }}
                 </button>
               }
               @if (mostrarAvanzar()) {
@@ -194,7 +217,7 @@
             </div>
           }
           @if (mostrarAvanzar()) {
-            <p class="nota">
+            <p class="note">
               Solo el anfitrión o el soberano pueden avanzar. Tú puedes porque eres
               {{ motivoAvanzar() }}.
             </p>
@@ -202,11 +225,11 @@
         </main>
       </div>
     } @else {
-      <p class="aviso">
+      <p class="notice">
         {{ v.fase === Fase.TERMINADA ? 'La partida terminó.' : 'Esperando a que comience la ronda…' }}
       </p>
     }
   </section>
 } @else {
-  <p class="aviso">Cargando partida…</p>
+  <p class="notice">Cargando partida…</p>
 }
