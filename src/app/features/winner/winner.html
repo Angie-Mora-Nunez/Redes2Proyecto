@@ -1,0 +1,86 @@
+@if (vista(); as v) {
+  <section class="winner">
+    <section class="hero" aria-labelledby="winner-title">
+      <p class="hero-kicker">La partida terminó</p>
+      <p class="hero-label">Ganador(a)</p>
+      <h1 id="winner-title" class="hero-name">
+        <span class="party" aria-hidden="true">🎉</span>
+        <span class="hero-name-text">{{ ganador().nombre }}</span>
+        <span class="party" aria-hidden="true">🎊</span>
+      </h1>
+      <p class="hero-text">
+        gobierna la democracia con {{ ganador().puntos }}
+        {{ ganador().puntos === 1 ? 'punto' : 'puntos' }} (meta: {{ v.puntos_para_ganar }}).
+      </p>
+    </section>
+ 
+    <div class="winner-body">
+      <mat-card class="panel">
+        <h2>Marcador final</h2>
+        <ol class="ranking">
+          @for (j of ranking(); track j.id; let i = $index) {
+            <li class="rank-row" [class.top]="j.id === ganador().id">
+              <span class="position">{{ i + 1 }}</span>
+              <span class="rank-name">{{ j.nombre }}</span>
+              <span class="rank-points">{{ j.puntos }}</span>
+            </li>
+          }
+        </ol>
+      </mat-card>
+ 
+      <mat-card class="panel">
+        <h2>Rondas jugadas</h2>
+        @if (rondas().length === 0) {
+          <p class="empty">No hay rondas en el historial.</p>
+        } @else {
+          <ul class="rounds">
+            @for (r of rondas(); track r.numero) {
+              <li class="round">
+                <div class="round-top">
+                  <span class="round-number">Ronda {{ r.numero }}</span>
+                  <span class="badge" [class.ignored]="!r.respeto">
+                    {{ r.respeto ? 'Respetó al pueblo' : 'Ignoró al pueblo' }}
+                  </span>
+                </div>
+                <p class="round-phrase">{{ r.frase }}</p>
+                <p class="round-meta">
+                  Ganó {{ r.ganador }}. Soberano: {{ r.soberano }}.
+                </p>
+              </li>
+            }
+          </ul>
+        }
+      </mat-card>
+    </div>
+ 
+    <div class="actions">
+      @if (esAnfitrion()) {
+        @if (confirmandoEliminar()) {
+          <p class="confirm-text" role="alert">
+            Se borrará la partida para todos los jugadores. ¿Seguro?
+          </p>
+          <button mat-flat-button class="danger" type="button"
+                  [disabled]="eliminando()" (click)="eliminar()">
+            {{ eliminando() ? 'Eliminando…' : 'Sí, eliminar partida' }}
+          </button>
+          <button mat-stroked-button type="button"
+                  [disabled]="eliminando()" (click)="cancelarEliminar()">
+            Cancelar
+          </button>
+        } @else {
+          <button mat-stroked-button class="danger-outline" type="button"
+                  (click)="pedirConfirmacion()">
+            <mat-icon>delete_outline</mat-icon>
+            Eliminar partida
+          </button>
+        }
+      }
+      <button mat-flat-button type="button" (click)="volverAlInicio()">
+        <mat-icon>home</mat-icon>
+        Volver al inicio
+      </button>
+    </div>
+  </section>
+} @else {
+  <p class="loading" role="status">Cargando resultados…</p>
+}
