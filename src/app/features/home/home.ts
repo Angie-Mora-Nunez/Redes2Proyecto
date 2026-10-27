@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -132,6 +133,13 @@ export class Home implements OnInit {
       return;
     }
 
+    // Validar el formato del ID según el Swagger del profesor.
+    if (!/^[0-9a-f]{32}$/.test(this.codigoPartida)) {
+      this.mensajeError =
+        'El código de partida debe tener 32 caracteres hexadecimales en minúsculas.';
+      return;
+    }
+
     this.cargando = true;
     this.partidaService.unirsePartida(
       this.codigoPartida,
@@ -189,12 +197,12 @@ export class Home implements OnInit {
     this.mensajeError = '';
     this.mensajeExito = '';
   }
-  
+
   cambiarOpcion(opcion: string): void {
-  if (this.cargando) {
-    return;
+    if (this.cargando) {
+      return;
+    }
+    this.opcion = opcion;
+    this.limpiarMensajes();
   }
-  this.opcion = opcion;
-  this.limpiarMensajes();
-}
 }
